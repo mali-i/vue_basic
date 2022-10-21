@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>组件的嵌套</title>
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!-- 准备好一个容器 -->
+    <div id="root">
+        <!-- <hello></hello> -->
+        <!-- 使用school组件 -->
+        <!-- <school></school> -->
+        <!-- <app></app> -->
+    </div>
+    <script type="text/javascript">
+        Vue.config.productionTip = false; //防止Vue启动时出现生产提示。
+
+        //在父组件之前定义好子组件student
+        const student = Vue.extend({
+            template:`
+            <div>
+                <h2>你好啊</h2>
+            </div>
+            `
+        })
+        //定义一个school组件
+        const school = Vue.extend({
+            template:`
+                    <div>
+                        <h2>学校名称：{{schoolName}}</h2>
+                        <h2>学校地址：{{address}}</h2>
+                        <!-- 使用student组件 -->
+                        <student></student>
+                    </div>
+                    `,
+            data(){
+                return{
+                    schoolName:'尚硅谷',
+                    address:'北京昌平'
+                }
+            },
+            //在school组件里再嵌套一个student组件
+            //注册(局部的)
+            components:{student}
+        })
+        
+        //定义一个hello组件
+        const hello = Vue.extend({
+            data(){
+                return{
+                    name:'Tom'                    
+                }
+            },
+            template:`
+                <div>
+                    <h1>你好啊！{{name}}</h1>
+                </div>
+            `
+        });
+        
+        //定义app组件(一人之下，万人之上)
+        //管理所有组件
+        const app = Vue.extend({
+            template:`
+                <div>
+                    <school></school>
+                    <hello></hello>
+                </div>
+            `,
+            components:{
+                school,   //student在school中
+                hello
+            }
+        });
+
+        const vm = new Vue({
+            template:`
+                <app></app>
+            `,
+            el:'#root',
+            //注册组件
+            components:{app}
+
+        })
+
+    </script>
+    
+</body>
+</html>

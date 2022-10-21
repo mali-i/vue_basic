@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>引出生命周期</title>
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!--
+
+    -->
+    <!-- 准备好一个容器 -->
+    <div id="root">
+        <h2>当前的n值是：{{n}}</h2>
+        <button @click="add">点我n+1</button>
+        <button @click="bye">点我销毁vm</button>
+    </div>
+
+    <script type="text/javascript">
+        Vue.config.productionTip = false; //防止Vue启动时产生生产提示
+
+        const vm = new Vue({
+            el:'#root',
+            data:{
+                n:1
+            },
+            watch:{
+                n(){
+                    console.log('监听属性watch监听到n发生改变了');
+                }
+            },
+            methods:{
+                add(){
+                    console.log('add被调用了');
+                    this.n ++;    //如果进入销毁流程了，在销毁之前调用add，这一行代码还是会走到的，但是不会再触发更新。
+                },
+                bye(){
+                    console.log('bye被调用了');
+                    vm.$destroy();  //调用vm.$destroy()进入销毁流程
+                }
+            },
+
+            //分析生命周期
+            // 挂载流程
+            beforeCreate() {
+                console.log('beforeCreate');
+                //console.log(this);
+                // debugger;  //此时初始化好了生命周期、事件，但是数据代理还未开始。
+                              //所以vm身上还没有_data，无法通过vm访问到data中的数据以及methods中的方法。
+            },
+
+            created() {
+                console.log('created');
+                //console.log(this);
+                //debugger;    //此时初始化好了数据监测、数据代理
+                               //可以通过vm访问到data中的数据以及methods中配置的方法。    
+            },
+
+
+            //进入Vue解析模板的阶段  首先判断是否有el配置
+            //此阶段Vue开始解析模板，生成虚拟DOM(在内存中)
+            //但页面还不能显示解析好的内容(Vue还没有接管容器)
+            
+            
+            beforeMount() {      //在挂载前，解析完了但还没有往页面上放。页面呈现的是 未经Vue编译的DOM结构。
+                console.log('beforeMount');
+                //debugger;
+            },
+
+            //虚拟DOM转为真实DOM之后，
+            //创建一个vm.$el，将真实DOM存在vm.$el中
+            //将内存中的虚拟DOM转为真实DOM插入页面中
+
+            mounted() {     //挂载完毕。此时页面中呈现的是 经过Vue编译 的DOM。
+                console.log('mounted');
+                //debugger;
+            },   //至此初始化过程结束。一般在此进行：开启定时器、发送网络请求、订阅消息、绑定自定义事件、等初始化操作。
+
+            // 更新流程
+            //当你修改data数据时，就会进入更新流程
+            beforeUpdate() {         
+                console.log('beforeUpdate 页面与数据尚未同步');
+                //debugger        //此时数据是新的，但是页面时旧的。即，页面尚未与数据保持同步。
+            },
+
+            //重新渲染与新旧DOM比较 (Virtual DOM re-render and patch)
+            //根据新数据，生成新的虚拟DOM，随后与旧的虚拟DOM进行比较，
+            //最终完成页面更新，
+            //即完成了Model->View的更新(MVVM模型)
+
+            updated() {
+                console.log('updated 页面和数据保持同步');
+                //this.n = 99;  //只要别放在销毁流程中，就能触发更新
+                //debugger
+            },  //更新完了，此时数据是新的，并且页面也是新的。即，页面和数据保持同步。
+
+            // 销毁流程   
+            //当调用vm.$destroy()时进入销毁流程
+            //vm.$destroy()用法：
+            //完全销毁一个实例。清理它与其它实例的连接，解绑它的全部指令以及自定义的事件监听器。
+            beforeDestroy() {
+                console.log('beforeDestroy');
+                //console.log(this.n)
+                this.add();  //此时vm中的methods还是可以调用的。
+                             //但是如果进入销毁流程了，调用add，首先add里对数据更新的代码还是会走到的，但是不会再触发更新流程。
+                this.n = 99;
+                //debugger
+            },            //在vm销毁前，此时vm中所有的:data、methods、指令等等，都处于可用状态，
+                          //马上要持续销毁过程
+                          //一般在此阶段：关闭定时器、取消订阅消息、解绑自定义事件等收尾操作
+            
+            //移除
+            //vm身上的监听、子组件、和自定义事件监听器
+            destroyed() {
+                console.log('destroyed');
+            }
+        })
+
+    </script>
+    
+</body>
+</html>

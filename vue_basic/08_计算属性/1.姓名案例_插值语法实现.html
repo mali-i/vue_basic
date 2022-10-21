@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>姓名案例_插值语法实现</title>
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!-- 准备一个容器 -->
+    <div id="root">
+        姓:<input type="text" v-model="firstname"><br/><br/> <!-- v-model 数据的双向绑定 -->
+        名:<input type="text" v-model="lastname"><br/><br/>
+        全名:<span>{{firstname.slice(0,3)}}-{{lastname}}</span>
+    </div>
+    <script>
+        new Vue({
+            el:'#root',
+            data:{
+                firstname:'张',
+                lastname:'三',                
+            }
+        })
+
+    </script>
+    
+</body>
+</html>

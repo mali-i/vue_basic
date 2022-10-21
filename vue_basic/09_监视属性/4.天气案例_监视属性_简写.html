@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气案例_深度监视</title>
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+
+    <!-- 准备好一个容器-->
+    <div id="root">
+        <h2>今天天气很{{info}}</h2>
+        <button v-on:click="changeWeather">切换天气</button> <br/>
+    </div>
+    <script>
+        const vm = new Vue({
+            el:'#root',
+            data:{
+                isHot:true
+            },
+            computed:{
+                info(){
+                    return this.isHot ? '炎热':'凉爽'
+                }
+            },
+            methods: {
+                changeWeather(){
+                    this.isHot = !this.isHot;
+                }              
+            },
+            //完整写法
+            // watch:{                
+            //     isHot:{         
+            //         //immediate:true, //初始化时就让handle调用
+            //         //deep:true,       //深度监视，监测到多级结构中某个属性的变化
+            //         handler(newValue,oldValue){
+            //             console.log('isHot发生改变了',newValue,oldValue)
+            //         }                    
+            //     }
+            // }   
+            
+            //简写写法(就是只要写handler时就可以简写)
+            watch:{
+                isHot(newValue,oldValue){
+                    console.log('isHot被修改了',newValue,oldValue)
+                }
+            }
+        })
+
+        //watch第二种写法的简写
+        // vm.$watch('isHot',function(newValue,oldValue){
+        //     console.log('isHot被修改了',newValue,oldValue)
+        // })
+
+    </script>
+</body>
+</html>

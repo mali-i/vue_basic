@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一个重要的内置关系</title>
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!--
+        1.一个重要的内置关系，用一行代码就能说明：
+            Vue.Component.prototype.__proto__ === Vue.prototype
+
+        2.为什么要有这个关系？
+            让组件实例对象(vc)可以访问到Vue原型上的属性、方法
+    -->
+    <!-- 准备好一个容器 -->
+    <div id="root">
+        <school></school>    <!-- 你使用school它才会给你new VueComponent-->
+
+    </div>
+
+    <!-- 使用Vue -->
+    <script type="text/javascript">
+        Vue.config.productionTip = false;
+
+        //定义一个school组件
+        const school = Vue.extend({
+            template:`
+                    <div>
+                        <h2>学校名称：{{schoolName}}</h2>
+                        <h2>学校地址：{{address}}</h2>  
+                       
+                    </div>
+                    `,
+            data(){
+                return{
+                    schoolName:'尚硅谷',
+                    address:'北京昌平'
+                }
+            }
+        })
+
+        sch = new school()
+
+        const vm = new Vue({
+            el:'#root',
+            components:{school}
+
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //原型简单说明：
+        // //定义一个构造函数
+        // function Demo(){
+        //     this.a = 1
+        //     this.b = 2
+        // }
+        // //创建一个Demo的实例对象
+        // const d = new Demo()
+        // // 只要你是构造函数，你身上一定有个属性是Demo.prototype ————显式原型属性
+        // console.log(Demo.prototype)
+        // //这个构造函数缔造出来的实例对象身上也有个属性
+        // console.log(d.__proto__)  //————隐式原型属性
+        // //无论是显式原型属性，还是隐式原型属性，它们都指向一个对象，这个对象被我们称之为原型对象
+        // //通过Demo的显式原型属性触碰到原型对象，给它加一个x
+        // //(程序员通过显示原型属性操作原型对象，追加一个x属性，值为99)
+        // Demo.prototype.x = 99  //Demo.prototype就是拿到原型对象了
+        // console.log(Demo.prototype.x)
+        // console.log(d.__proto__.x)
+        // console.log(Demo.prototype === d.__proto__)
+        // console.log(d.x) //d.x也能找到x是因为程序在实例身上找不到x就会乖乖地去Prototype身上找
+        // console.log('@',d)
+
+
+
+
+    </script>
+    
+</body>
+</html>

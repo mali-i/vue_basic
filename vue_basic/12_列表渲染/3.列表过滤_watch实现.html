@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>基本列表</title>
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+
+    <!-- 准备一个容器 -->
+    <div id="root">       
+        <h2>人员列表</h2>
+        <input type="text" placeholder="请输入姓名" v-model="keyword">
+        <ul v-for="p in filpersonArr" :key="p.id">
+            <li>姓名：{{p.name}}--年龄：{{p.age}}</li>
+        </ul>      
+    </div>
+
+    <script>
+        Vue.config.productionTip = false; //防止Vue启动时出现生成提示
+        new Vue({
+            el:'#root',            
+            data:{
+                keyword:'',
+                personArr:[
+                    {id:'001',name:'马冬梅',age:18,sex:'女'},
+                    {id:'002',name:'周冬雨',age:19,sex:'女'},
+                    {id:'003',name:'周杰伦',age:20,sex:'男'},
+                    {id:'004',name:'温兆伦',age:21,sex:'男'},
+                ],
+                filpersonArr:[]   //存放过滤后筛选出来的内容
+            },
+            watch:{
+                //监听keyword
+                //简写发现满足不了需求
+                // keyword(val){    //keyword(newValue,oldValue),这里就不用关注oldValue了
+                //     this.filpersonArr = this.personArr.filter((p)=>{
+                //         //函数体
+                //       return  p.name.indexOf(val) !== -1   //indexOf 不包含则返回-1，包含返回索引位置；不等于-1说明包含，返回true给filter
+                //       //注意indexOf筛选''也是-1，即输入框啥也不写时会全展示出来
+                //       //所以可以让immediate:true,让handle立即执行一下
+                //     })
+                // }
+
+                keyword:{
+                    immediate:true,
+                    handler(val){
+                        this.filpersonArr = this.personArr.filter((p)=>{
+                            return  p.name.indexOf(val) !== -1
+                        })
+
+                    }
+                }
+                
+            }
+        })
+    </script>
+    
+</body>
+</html>

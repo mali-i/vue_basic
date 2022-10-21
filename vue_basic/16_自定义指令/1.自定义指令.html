@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义指令</title>
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!--
+        需求1：定义一个v-big指令，和v-text功能类似，但会把绑定的数值放大十倍。
+        需求2：定义一个v-fbind指令，和v-bind功能类似，但可以让其所绑定的input元素默认获取焦点。
+    -->
+    <!--
+        自定义指令总结：
+            一、定义语法：
+            (1)局部指令：
+            new Vue({
+                directives:{
+                    指令名:配置对象
+                }
+            })
+            或者
+            new Vue({
+                directives:{
+                    指令名：回调函数
+                }
+            })
+
+            (2)全局指令：
+            Vue.directive('指令名'，配置对象)
+            或者
+            Vue.directive('指令名'，回调函数)
+
+            二、配置对象中常用的3个回调函数：
+            (1) bind：指令与元素成功绑定时调用
+            (2) inserted；指令所在元素被插入页面时调用
+            (3) update：指令所在模板结构被重新解析时调用
+
+            三、备注
+                1.指令定义时不加v-，但使用时要加v-
+                2.指令名如果是多个单词，要使用kebab-case命名方式，不要用camelCase命名
+    -->
+    <!-- 准备好一个容器 -->
+    <div id="root">
+        <h2 v-once>n的初始值是：{{n}}</h2>
+        <h2>n的当前值是：{{n}}</h2>        
+        <h2>放大十倍的n是：<span v-big="n"></span></h2>
+        <button @click="n++">点我n+1</button><br/><br/>
+        <hr/>
+        <input type="text" v-fbind:value="n">
+    </div>
+    <script type="text/javascript">
+        new Vue({
+            el:'#root',
+            data:{
+                n:11
+            },
+            //自定义指令
+            directives:{
+                // 自定义指令：函数式
+                //big函数何时会被调用？
+                //1.指令与元素成功绑定时(一上来)。2.指令所在的模板被重新解析时。
+                big(element,binding){
+                    element.innerText = binding.value * 10;
+                },
+
+                // 自定义指令：对象式
+                fbind:{
+                    //指令与元素成功绑定时调用bind
+                    bind(element,binding){
+                        element.value = binding.value;
+                    },
+                    //指令所在元素被插入到页面时调用inserted
+                    inserted(element,binding){
+                        element.focus();  //获取焦点
+                    },
+                    //指令所在的模板被重新解析时调用update
+                    update(element,binding){
+                        element.value = binding.value;
+                    }
+                    
+                }
+                //所以用函数式自定义指令时，相当于只写了bind和update
+            }
+        })
+    </script>
+    
+</body>
+</html>

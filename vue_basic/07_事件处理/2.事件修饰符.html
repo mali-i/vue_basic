@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事件修饰符</title>
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+
+    <style>
+        *{
+            margin-top: 20px;
+        }
+        .demo1{
+            height: 50px;
+            background-color: skyblue;
+        }
+        .box1{
+            height:100px;
+            width: 100px;
+            background-color: skyblue;
+            padding: 10px;
+        }
+        .box2{
+            height:50px;
+            width: 100px;
+            background-color: orange;       
+        }
+        .list{
+            height: 200px;
+            width: 200px;
+            background-color: peru;
+            overflow: auto;   /* 子元素从父元素中溢出时，可以使用滚动条*/
+        }
+        li{
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!--
+        Vue中的事件修饰符：
+            1.prevent：阻止默认事件(常用)
+            2.stop：阻止事件冒泡(常用)
+            3.once：事件只触发一次(常用)
+            4.capture：使用事件的捕获模式
+            5.self：只有event.target是当前操作的元素时才触发事件,(也可以阻止冒泡)
+            6.passive：事件的默认行为是立即执行，无需等待事件回调执行完毕  (移动端会用，手机、平板)
+    
+    -->
+    <!--准备好一个容器-->
+    <div id="root">
+        <h2>欢迎来到{{name}}学习</h2>
+        <!-- 1.prevent就是一个事件修饰符，用来阻止默认事件 (常用)-->
+        <a href="http://www.atguigu.com" @click.prevent="showInfo">点我提示信息</a>
+        <!-- 2.阻止事件冒泡 (常用) -->
+        <div class="demo1" @click="showInfo">
+            <button @click.stop="showInfo">点我提示信息</button>
+        </div>
+        <!-- 3.事件只触发一次(常用) -->
+        <button @click.once="showInfo">点我提示信息</button>
+        <!-- 4.使用事件的捕获模式 -->   <!-- 现在想让它从捕获阶段就开始处理事件 -->
+        <div class="box1" @click.capture="showMsg(1)">    <!-- 捕获->冒泡，然后从里到外-->
+            div1
+            <div class="box2" @click="showMsg(2)">
+                div2
+            </div>
+        </div>
+        <!-- 5.只有event.target是当前操作的元素时才触发事件-->
+        <div class="demo1" @click.self="showInfo">
+            <button @click="showInfo">点我提示信息</button>
+        </div>
+        <!-- 6.事件的默认行为是立即执行，无需等待事件回调执行完毕 -->
+        <ul @scroll.passive ="demo" class="list">     <!-- 滚动事件：(1) scroll 给滚动条加的滚动事件(键盘的上下键或者鼠标的滚轮或者右击滚动条) 
+                                                                区别：滚到最下面时不能触发事件  -->
+            <li>1</li>                      <!--         (2) wheel 鼠标的滚轮儿的滚动事件  
+                                                                区别：滚到最下面时依然能触发事件  -->               
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+        </ul>
+        <!-- 7.修饰符可以连续使用,阻止冒泡，也阻止默认事件 -->
+        <div class="demo1" @click="showInfo">
+            <a href="http://www.atguigu.com" @click.stop.prevent ="showInfo">点我提示信息</a>
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        new Vue({
+            el:'#root',
+            data:{
+                name:'尚硅谷'                
+            },
+            methods:{
+                    showInfo(e){
+                        //e.preventDefault();  //阻止默认行为
+                        //e.stopPropagation();  //阻止冒泡
+                        //console.log(e.target);
+                        alert('你好同学！')
+                    },
+                    showMsg(Msg){
+                        console.log(Msg);
+                    },
+                    demo(){
+                        console.log('@')
+                    }
+                }
+            
+        })
+    </script>
+    
+</body>
+</html>

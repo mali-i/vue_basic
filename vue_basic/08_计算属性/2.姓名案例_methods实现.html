@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>姓名案例_插值语法实现</title>
+    <!-- 引入Vue -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+</head>
+<body>
+    <!-- 准备一个容器 -->
+    <div id="root">
+        姓:<input type="text" v-model="firstname"><br/><br/> <!-- v-model 数据的双向绑定 -->
+        名:<input type="text" v-model="lastname"><br/><br/>
+        全名:<span>{{fullname()}}</span>  <br/><br/> <!-- 注意这里插值的函数加不加小括号的区别 -->
+        全名:<span>{{fullname()}}</span>  <br/><br/>
+        全名:<span>{{fullname()}}</span>  <br/><br/>
+        全名:<span>{{fullname()}}</span>  <br/><br/>
+        <!--
+            <button v-on:click="fullname()">点我</button> --> <!-- 指令语法，v-on:click="xxx" -->
+    </div>
+    <script>
+        new Vue({
+            el:'#root',
+            data:{
+                firstname:'张',
+                lastname:'三'             
+            },
+            methods:{
+                fullname(){    // 这里要怎么拿到firstname和lastname的值呢？
+                    //注意这里的this是谁？是vue实例对象
+                    //console.log('@',this);
+                    //那么，vm都握在手里了,firstname、lastname不也能拿到了吗
+                    console.log('fullname被调用了');
+                   return this.firstname + '-' + this.lastname
+                   
+                   //为什么页面和data仍然能够联动呢？
+                   //data中的任何一个数据发生变化时，vue的模板都会重新解析一次、阅读一遍
+                   //模板用插值语法调用了方法，方法也会再重新调一下
+                   //只有重新解析模板，才会发现模板里面哪个地方用到了被更改的数据，然后把这个数据更新
+
+                   //这节需要重温的知识点：
+                   //模板语法：插值语法、指令语法
+                   //数据绑定：单向绑定v-bind;双向绑定v-model
+                   //数据代理
+                }
+
+            }
+        })
+
+    </script>
+    
+</body>
+</html>
